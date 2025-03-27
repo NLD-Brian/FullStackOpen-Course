@@ -1,3 +1,4 @@
+```mermaid
 sequenceDiagram
 participant browser
 participant server
@@ -26,3 +27,4 @@ participant server
     activate server
     server-->>browser: POST data without refresh
     deactivate server
+```
