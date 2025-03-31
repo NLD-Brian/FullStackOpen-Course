@@ -1,15 +1,12 @@
-const App = (props) => {
-  const { notes } = props
-  const result = notes.map(note => note.id)
-  console.log(result)
+import Note from './components/Note'
+
+const App = ({ notes }) => {
   return (
     <div>
       <h1>Notes</h1>
       <ul>
         {notes.map(note => 
-        <li key={note.id}>
-          {note.content}
-        </li>
+        <Note key={note.id} note={note} /> // key is a special prop that React uses to identify which items have changed, are added, or are removed.
       )}
       </ul>
     </div>
