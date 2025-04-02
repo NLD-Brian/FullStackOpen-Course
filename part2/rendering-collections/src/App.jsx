@@ -19,6 +19,10 @@ useEffect(() => {
       })
   }, []);
 
+  if (!notes) {
+    return null;
+  }
+
   const handleNoteChange = (event) => {
     console.log(event.target.value);
     setNewNote(event.target.value);
