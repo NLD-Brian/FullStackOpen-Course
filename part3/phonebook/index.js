@@ -3,6 +3,7 @@ const app = express()
 const morgan = require('morgan')
 
 app.use(express.json())
+app.use(express.static('dist'))
 // Create a custom token for logging request body
 morgan.token('req-body', (req) => {
     return req.method === 'POST' ? JSON.stringify(req.body) : '-'
@@ -93,6 +94,7 @@ app.get('/info', (req, res) => {
 })
 
 
-const PORT = 3001;
-app.listen(PORT)
-console.log(`Server running at http://localhost:${PORT}/`);
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
