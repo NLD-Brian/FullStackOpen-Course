@@ -1,0 +1,18 @@
+{
+  "name": "phonebook",
+  "version": "0.0.1",
+  "description": "Phonebook backend",
+  "license": "MIT",
+  "author": "Brian v/d Neut",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node --watch index.js",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "morgan": "^1.10.0"
+  }
+}
