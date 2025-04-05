@@ -1,9 +1,12 @@
 require('dotenv').config()
+
+// Imports
 const express = require('express');
 const app = express()
 const Person = require('./Models/person')
 const morgan = require('morgan');
 
+// Application middleware
 app.use(express.json())
 app.use(express.static('dist'))
 // Create a custom token for logging request body
@@ -15,12 +18,14 @@ morgan.token('req-body', (req) => {
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :req-body'))
 
 
+//ROUTES
+//Get all persons
 app.get('/api/persons', (req, res) => {
     Person.find({}).then(persons => {
         res.json(persons)
     })
 })
-
+//Get a person by ID
 app.get('/api/persons/:id', (req, res) => {
     Person.findById(req.params.id).then(person => {
         if (person) {
@@ -31,7 +36,6 @@ app.get('/api/persons/:id', (req, res) => {
     })
         .catch(error => next(error))
 })
-
 //Delete a person by ID
 app.delete('/api/persons/:id', (req, res, next) => {
     Person.findByIdAndDelete(req.params.id)
@@ -40,6 +44,7 @@ app.delete('/api/persons/:id', (req, res, next) => {
         })
         .catch(error => next(error))
 })
+//Add a new person
 app.post('/api/persons', (req, res) => {
     const body = req.body
     if (!body.name || !body.number) {
@@ -57,7 +62,7 @@ app.post('/api/persons', (req, res) => {
     })
     morgan('tiny')
 })
-
+//Update a person by ID
 app.put('/api/persons/:id', (req, res, next) => {
     const { name, number } = req.body
 
@@ -75,22 +80,20 @@ app.put('/api/persons/:id', (req, res, next) => {
         })
         .catch(error => next(error))
 })
-
+//Info about the phonebook
 app.get('/info', (req, res) => {
     const date = new Date()
     res.send(`Phonebook has info for ${Person.length} people <br> ${date}`)
 })
-
-
+//Configure the port
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 })
-
+// Middleware for handling unknown endpoints and errors
 const unknownEndpoint = (request, response) => {
     response.status(404).send({ error: 'unknown endpoint' })
 }
-
 // handler of requests with unknown endpoint
 app.use(unknownEndpoint)
 
@@ -103,6 +106,5 @@ const errorHandler = (error, request, response, next) => {
 
     next(error)
 }
-
 // this has to be the last loaded middleware, also all the routes should be registered before this!
 app.use(errorHandler)
