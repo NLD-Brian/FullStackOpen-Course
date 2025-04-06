@@ -69,7 +69,11 @@ const App = () => {
           }, 2500);
       })
       .catch((error) => {
-        console.error("Error adding contact:", error);
+        console.error(error.response.data.error);
+        setNotification(`Error: ${error.response.data.error}`);
+        setTimeout(() => {
+          setNotification(null);
+        }, 2500);
       });
   };
 

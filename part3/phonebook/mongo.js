@@ -37,8 +37,8 @@ if (!process.argv[3] || !process.argv[4]) {
     })
 }
 else {
-person.save().then(result => {
-    console.log('Added', name, 'number', number, 'to phonebook')
-    mongoose.connection.close()
-})
+    person.save().then(() => {
+        console.log('Added', name, 'number', number, 'to phonebook')
+        mongoose.connection.close()
+    })
 }
