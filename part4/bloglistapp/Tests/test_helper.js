@@ -20,12 +20,16 @@ const nonExistingId = async () => {
         title: 'Temporary Blog',
         author: 'Temporary Author',
         url: 'https://temporary.com',
-        likes: 0,
+        likes: 2,
     })
-    await note.save()
-    await note.deleteOne()
+    console.log('blog', blog)
+    await blog.save()
+    await blog.deleteOne()
 
-    return note._id.toString()
+    const blogid = blog._id.toString()
+    console.log(blogid)
+
+    return blog._id.toString()
 }
 
 const blogsInsideDb = async () => {
