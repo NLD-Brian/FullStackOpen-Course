@@ -6,8 +6,10 @@ const app = require('../app')
 const helper = require('./test_helper')
 const { title } = require('process')
 const api = supertest(app)
+const bcrypt = require('bcrypt')
 
 const Blog = require('../Models/blog')
+const User = require('../Models/user')
 const { url } = require('node:inspector')
 
 describe('API Test - Some blogs are being added', () => {
@@ -135,6 +137,74 @@ describe('Updating blogs', () => {
         const blogsAtEnd = await helper.blogsInsideDb()
         const updatedBlogInDb = blogsAtEnd.find(blog => blog.id === blogToUpdate.id)
         assert.strictEqual(updatedBlogInDb.likes, updatedBlog.likes)
+    })
+})
+
+describe('Authentication tests', () => {
+
+    beforeEach(async () => {
+        await User.deleteMany({})
+
+        const passwordHash = await bcrypt.hash('password123', 10)
+        const user = new User({ username: 'root', passwordHash })
+        await user.save()
+    })
+
+    test.only('creating a new user', async () => {
+        const usersAtStart = await helper.usersInsideDb()
+
+        const newUser = {
+            username: 'testuser',
+            name: 'Test User',
+            password: 'password123'
+        }
+
+        await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
+
+        const usersAtEnd = await helper.usersInsideDb()
+        assert.strictEqual(usersAtEnd.length, usersAtStart.length + 1)
+
+        const usernames = usersAtEnd.map(user => user.username)
+        assert(usernames.includes(newUser.username))
+    })
+
+    test.only('creating a new user fails with status code 400 if username or password is missing', async () => {
+        const usersAtStart = await helper.usersInsideDb()
+        const newUser = {
+            name: 'Test User',
+            password: 'password123'
+        }
+
+        const result = await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+
+        const usersAtEnd = await helper.usersInsideDb()
+
+        assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+    })
+
+    test.only('creating a new user fails with status code 400 if username or password is too short', async () => {
+        const usersAtStart = await helper.usersInsideDb()
+        const newUser = {
+            username: 'tu',
+            name: 'Test User',
+            password: 'pw'
+        }
+
+        await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(400)
+
+        const usersAtEnd = await helper.usersInsideDb()
+        assert.strictEqual(usersAtEnd.length, usersAtStart.length)
     })
 })
 
