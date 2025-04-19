@@ -3,7 +3,7 @@ const express = require('express')
 const app = express()
 
 
-const bloglistRouter = require('./controllers/blogs')
+const bloglistRouter = require('./Controllers/blogs')
 const usersRouter = require('./Controllers/users')
 const loginRouter = require('./Controllers/login')
 
@@ -28,7 +28,7 @@ app.use(express.json())
 app.use(middleware.requestLogger)
 app.use(middleware.tokenExtractor)
 
-app.use('/api/blogs', bloglistRouter)
+app.use('/api/blogs', middleware.userExtractor, bloglistRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/login', loginRouter)
 
