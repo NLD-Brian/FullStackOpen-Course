@@ -5,6 +5,7 @@ import Notification from "./components/Notification"
 import Footer from "./components/Footer"
 import loginService from "./services/login"
 import "./index.css"
+import LoginForm from "./components/LoginForm"
 
 
 const App = () => {
@@ -15,6 +16,7 @@ const App = () => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [user, setUser] = useState(null)
+  const [loginVisible, setLoginVisible] = useState(false)
 
 useEffect(() => {
     noteService
@@ -104,29 +106,28 @@ useEffect(() => {
       })
   }
 
-  const loginForm = () => (
-    <form onSubmit={handleLogin}>
-      <div>
-        username
-        <input
-          type="text"
-          value={username}
-          name="Username"
-          onChange={({ target }) => setUsername(target.value)}
-        />
+ const loginForm = () => {
+  const hideWhenVisible = { display: loginVisible ? 'none' : '' }
+  const showWhenVisible = { display: loginVisible ? '' : 'none' }
+
+  return (
+    <div>
+      <div style={hideWhenVisible}>
+        <button onClick={() => setLoginVisible(true)}>login</button>
       </div>
-      <div>
-        password
-        <input
-          type="password"
-          value={password}
-          name="Password"
-          onChange={({ target }) => setPassword(target.value)}
+      <div style={showWhenVisible}>
+        <LoginForm
+        username={username}
+        password={password}
+        handleUsernameChange={({ target }) => setUsername(target.value)}
+        handlePasswordChange={({ target }) => setPassword(target.value)}
+        handleSubmit={handleLogin} 
         />
+        <button onClick={() => setLoginVisible(false)}>cancel</button>
       </div>
-      <button type="submit">login</button>
-    </form>
+    </div>
   )
+ }
 
   const noteForm = () => (
     <form onSubmit={addNote}>
@@ -145,7 +146,13 @@ useEffect(() => {
       loginForm() :
       <div>
         <p>{user.name} logged-in</p>
-      {noteForm()}
+        <Togglable buttonLabel="new note">
+        <NoteForm
+          onSubmit={addNote}
+          value={newNote}
+          handleChange={handleNoteChange}
+        />
+      </Togglable>
       </div>
     }
       
