@@ -1,6 +1,8 @@
 import { useState } from 'react'
+import PropTypes from 'prop-types'
 
-const BlogForm = ({ handleCreation }) => {
+
+const BlogForm = ({ handleCreation, blogFormRef }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
@@ -16,6 +18,8 @@ const BlogForm = ({ handleCreation }) => {
     setTitle('')
     setAuthor('')
     setUrl('')
+
+    blogFormRef.current.toggleVisibility()
   }
 
   return (
@@ -54,6 +58,11 @@ const BlogForm = ({ handleCreation }) => {
       </form>
     </div>
   )
+}
+
+BlogForm.propTypes = {
+  handleCreation: PropTypes.func.isRequired,
+  blogFormRef: PropTypes.object.isRequired
 }
 
 export default BlogForm

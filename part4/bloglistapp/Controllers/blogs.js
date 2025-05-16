@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken')
 const { tokenExtractor } = require('../utils/middleware')
 
 bloglistRouter.get('/', async (request, response) => {
-    const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
+    const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 }).sort({ likes: -1 })
     response.json(blogs)
 })
 
@@ -83,13 +83,15 @@ bloglistRouter.put('/:id', async (request, response) => {
         title: request.body.title || blog.title,
         author: request.body.author || blog.author,
         url: request.body.url || blog.url,
-        likes: request.body.likes !== undefined ? request.body.likes : blog.likes
+        likes: request.body.likes !== undefined ? request.body.likes : blog.likes,
+        user: blog.user
     }
 
     const updatedBlog = await Blog.findByIdAndUpdate(
         request.params.id,
         updatedData,
-    )
+        { new: true }
+    ).populate('user', { username: 1, name: 1 })
     response.json(updatedBlog)
 
 })

@@ -1,4 +1,5 @@
 import Course from "./components/Course";
+
 const App = () => {
   const course = [
     {
@@ -50,6 +51,7 @@ const App = () => {
         <Course key={course.id} course={course} />
       ))}
     </div>
+    
   );
 };
 
