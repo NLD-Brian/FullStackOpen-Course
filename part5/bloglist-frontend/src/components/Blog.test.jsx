@@ -32,7 +32,6 @@ describe('<Blog />', () => {
     )
   })
 
-
 test('renders title but not author initially', () => {
   const blog = {
     title: 'Test Blog',
@@ -41,10 +40,7 @@ test('renders title but not author initially', () => {
 
   render(<Blog blog={blog} handleLikes={() => {}} handleRemove={() => {}} />);
   
-  // Title should be visible
   expect(component.container).toHaveTextContent('Test Blog');
-  
-  // Author should NOT be visible
   expect(screen.queryByText('Test Author')).not.toBeInTheDocument();
 });
 
